@@ -1,295 +1,170 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Respiratory System + Cardiovascular System</title>
+import React, { useState } from "react";
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background: #eef6ff;
-      color: #222;
+export default function AnatomyFinalProjectWebsite() {
+  const [openCard, setOpenCard] = useState("intro");
+  const [oxygenNeed, setOxygenNeed] = useState(50);
+  const [asthmaLevel, setAsthmaLevel] = useState("normal");
+  const [openFact, setOpenFact] = useState(null);
+  const [selectedTerm, setSelectedTerm] = useState(null);
+  const [matchedTerms, setMatchedTerms] = useState([]);
+  const [matchMessage, setMatchMessage] = useState("Pick a term, then pick the meaning that matches it.");
+  const [homeostasisMode, setHomeostasisMode] = useState("resting");
+
+  const respImage = "https://www.lung.ca/sites/default/files/Respiratory%20System.jpg";
+  const cardioImage = "https://my.clevelandclinic.org/-/scassets/images/org/health/articles/circulatory-system";
+
+  const organFacts = {
+    lungs: "The lungs help get oxygen into the blood and get carbon dioxide out.",
+    trachea: "The trachea is the tube that air goes through to get to the lungs.",
+    alveoli: "Alveoli are tiny air sacs where gas exchange happens.",
+    heart: "The heart pumps blood through the body so oxygen can reach cells.",
+    arteries: "Arteries carry blood away from the heart.",
+    veins: "Veins carry blood back toward the heart.",
+  };
+
+  const matchingTerms = [
+    { term: "Lungs", meaning: "Organs that help you breathe." },
+    { term: "Heart", meaning: "Organ that pumps blood." },
+    { term: "Alveoli", meaning: "Tiny air sacs in the lungs." },
+    { term: "Arteries", meaning: "Blood vessels that carry blood away from the heart." },
+    { term: "Veins", meaning: "Blood vessels that carry blood back to the heart." },
+    { term: "Asthma", meaning: "A condition that makes breathing harder." },
+  ];
+
+  function checkMatch(meaning) {
+    if (!selectedTerm) {
+      setMatchMessage("Pick a term first.");
+      return;
     }
 
-    .top {
-      background: white;
-      padding: 28px 20px;
-      text-align: center;
-      border-bottom: 1px solid #d6e6f7;
-    }
+    const correct = matchingTerms.find((item) => item.term === selectedTerm && item.meaning === meaning);
 
-    .top h1 {
-      margin: 0;
-      color: #1d3557;
-      font-size: 34px;
-    }
-
-    .top p {
-      margin: 10px auto 0;
-      max-width: 800px;
-      color: #555;
-      line-height: 1.5;
-    }
-
-    .page {
-      max-width: 1100px;
-      margin: 25px auto;
-      padding: 0 18px 40px;
-    }
-
-    .layout {
-      display: grid;
-      grid-template-columns: 260px 1fr;
-      gap: 22px;
-    }
-
-    .menu {
-      background: white;
-      border: 1px solid #d6e6f7;
-      border-radius: 16px;
-      padding: 15px;
-      height: fit-content;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.06);
-    }
-
-    .menu h2 {
-      font-size: 18px;
-      margin-top: 0;
-      color: #1d3557;
-    }
-
-    .menu button {
-      display: block;
-      width: 100%;
-      margin-bottom: 9px;
-      padding: 12px;
-      border: 1px solid #cfe0f2;
-      border-radius: 10px;
-      background: #f8fbff;
-      cursor: pointer;
-      text-align: left;
-      font-size: 15px;
-    }
-
-    .menu button:hover {
-      background: #eaf5ff;
-    }
-
-    .menu button.active {
-      background: #2b6cb0;
-      color: white;
-      font-weight: bold;
-    }
-
-    .content {
-      background: white;
-      border: 1px solid #d6e6f7;
-      border-radius: 16px;
-      padding: 28px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.06);
-    }
-
-    .section {
-      display: none;
-    }
-
-    .section.active {
-      display: block;
-    }
-
-    h2 {
-      color: #1d3557;
-      font-size: 30px;
-      border-bottom: 3px solid #edf4fb;
-      padding-bottom: 10px;
-      margin-top: 0;
-    }
-
-    h3 {
-      margin-top: 24px;
-      color: #2b4a67;
-      font-size: 20px;
-    }
-
-    p, li {
-      font-size: 16px;
-      line-height: 1.7;
-    }
-
-    .mini-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-      margin-bottom: 20px;
-    }
-
-    .mini-card {
-      border-radius: 14px;
-      padding: 17px;
-      color: white;
-    }
-
-    .blue {
-      background: #2b6cb0;
-    }
-
-    .red {
-      background: #c53030;
-    }
-
-    .mini-card h3 {
-      color: white;
-      margin-top: 0;
-    }
-
-    .mini-card p {
-      margin-bottom: 0;
-      color: white;
-    }
-
-    .image-box {
-      margin-top: 22px;
-      padding: 14px;
-      background: #f8fbff;
-      border: 1px solid #d6e6f7;
-      border-radius: 14px;
-      text-align: center;
-    }
-
-    .image-box img {
-      width: 100%;
-      max-width: 750px;
-      border-radius: 10px;
-      border: 1px solid #ddd;
-      background: white;
-    }
-
-    .caption {
-      color: #666;
-      font-size: 14px;
-      margin-bottom: 0;
-    }
-
-    .flow {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-items: center;
-      margin: 10px 0 20px;
-    }
-
-    .flow div {
-      background: #eaf5ff;
-      border: 1px solid #c6ddf3;
-      color: #1d3557;
-      padding: 12px 14px;
-      border-radius: 10px;
-      font-weight: bold;
-    }
-
-    .flow span {
-      color: #2b6cb0;
-      font-size: 24px;
-      font-weight: bold;
-    }
-
-    .career-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-    }
-
-    .career-card {
-      background: #f8fbff;
-      border: 1px solid #d6e6f7;
-      border-radius: 14px;
-      padding: 18px;
-    }
-
-    .source-box {
-      background: #f8fbff;
-      border: 1px solid #d6e6f7;
-      border-radius: 14px;
-      padding: 16px;
-      margin-bottom: 12px;
-    }
-
-    .source-box b {
-      display: block;
-      color: #1d3557;
-      margin-bottom: 8px;
-    }
-
-    .source-box a {
-      color: #2b6cb0;
-      overflow-wrap: anywhere;
-    }
-
-    @media (max-width: 800px) {
-      .layout {
-        grid-template-columns: 1fr;
+    if (correct) {
+      if (!matchedTerms.includes(selectedTerm)) {
+        setMatchedTerms([...matchedTerms, selectedTerm]);
       }
-
-      .mini-grid,
-      .career-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .top h1 {
-        font-size: 27px;
-      }
+      setMatchMessage("Correct match!");
+      setSelectedTerm(null);
+    } else {
+      setMatchMessage("Not quite. Try again.");
     }
-  </style>
-</head>
+  }
 
-<body>
+  function resetMatchingGame() {
+    setSelectedTerm(null);
+    setMatchedTerms([]);
+    setMatchMessage("Pick a term, then pick the meaning that matches it.");
+  }
 
-  <div class="top">
-    <h1>Respiratory System + Cardiovascular System</h1>
-    <p>Anatomy & Physiology II Final Project: how these two body systems work together to maintain homeostasis in the body.</p>
-  </div>
+  const dashboardData = {
+    resting: {
+      title: "Resting",
+      oxygen: 75,
+      carbon: 35,
+      ph: 70,
+      energy: 30,
+      explanation: "When the body is resting, breathing and heart rate stay normal because the body does not need as much energy."
+    },
+    exercising: {
+      title: "Exercising",
+      oxygen: 95,
+      carbon: 65,
+      ph: 60,
+      energy: 90,
+      explanation: "When the body is exercising, muscles need more oxygen, so breathing rate and heart rate increase."
+    },
+    asthma: {
+      title: "Asthma Attack",
+      oxygen: 40,
+      carbon: 80,
+      ph: 45,
+      energy: 75,
+      explanation: "During an asthma attack, less oxygen can get into the lungs and more carbon dioxide can build up, so the body has to work harder."
+    }
+  };
 
-  <div class="page">
-    <div class="layout">
-
-      <div class="menu">
-        <h2>Click A Section</h2>
-        <button class="tab active" onclick="showSection('overview', this)">Project Overview</button>
-        <button class="tab" onclick="showSection('respiratory', this)">Respiratory System</button>
-        <button class="tab" onclick="showSection('cardiovascular', this)">Cardiovascular System</button>
-        <button class="tab" onclick="showSection('together', this)">How They Work Together</button>
-        <button class="tab" onclick="showSection('asthma', this)">Disease / Disorder</button>
-        <button class="tab" onclick="showSection('careers', this)">Careers</button>
-        <button class="tab" onclick="showSection('sources', this)">Sources</button>
+  const DashboardBar = ({ label, value, detail }) => (
+    <div className="dashboardBarBox">
+      <div className="barTop">
+        <b>{label}</b>
+        <span>{detail}</span>
       </div>
+      <div className="dashboardMeter">
+        <div style={{ width: `${value}%` }}></div>
+      </div>
+    </div>
+  );
 
-      <div class="content">
+  const asthmaInfo = {
+    normal: {
+      title: "Normal Breathing",
+      text: "Air can move in and out of the lungs more easily. Oxygen levels stay more balanced.",
+      oxygen: "Normal oxygen flow",
+      heart: "Normal heart workload",
+    },
+    mild: {
+      title: "Mild Asthma Symptoms",
+      text: "The airways begin to tighten, which can cause coughing, wheezing, or shortness of breath.",
+      oxygen: "Less oxygen enters the lungs",
+      heart: "Heart works a little harder",
+    },
+    severe: {
+      title: "Severe Asthma Attack",
+      text: "The airways become swollen, tight, and filled with mucus. It becomes much harder to breathe.",
+      oxygen: "Much less oxygen enters the blood",
+      heart: "Heart and lungs work much harder",
+    },
+  };
 
-        <div id="overview" class="section active">
-          <h2>Project Overview</h2>
+  const StaticImage = ({ image, title }) => (
+    <div className="imageBox">
+      <img src={image} alt={title} />
+      <p className="caption">{title}</p>
+    </div>
+  );
 
-          <div class="mini-grid">
-            <div class="mini-card blue">
-              <h3>Respiratory System</h3>
-              <p>Brings oxygen in and removes carbon dioxide.</p>
+  const FactButton = ({ id, label }) => (
+    <button className="factButton" onClick={() => setOpenFact(openFact === id ? null : id)}>
+      {label}
+    </button>
+  );
+
+  const cards = [
+    {
+      id: "intro",
+      title: "Project Overview",
+      content: (
+        <>
+          <div className="heroGrid">
+            <div className="miniCard blue" onClick={() => setOpenCard("respiratory")}>
+              <span>Respiratory System</span>
+              <p>Gets oxygen in and gets carbon dioxide out.</p>
+              <small>click this</small>
             </div>
-
-            <div class="mini-card red">
-              <h3>Cardiovascular System</h3>
-              <p>Moves blood, oxygen, nutrients, and waste.</p>
+            <div className="miniCard red" onClick={() => setOpenCard("cardiovascular")}>
+              <span>Cardiovascular System</span>
+              <p>Moves blood around the body.</p>
+              <small>click this</small>
             </div>
           </div>
-
           <p>
-            This website is about the respiratory system and cardiovascular system. It explains what each system does, the organs in each system, how they work together, and how they help maintain homeostasis in the body.
+            This website is about the respiratory system and cardiovascular system. I am going to show what each system does, the main organs, how they work together, and how they help keep the body balanced.
           </p>
-        </div>
-
-        <div id="respiratory" class="section">
-          <h2>Respiratory System</h2>
-
+          <div className="quickJumpBox">
+            <button onClick={() => setOpenCard("together")}>How they work together</button>
+            <button onClick={() => setOpenCard("asthma")}>Asthma part</button>
+            <button onClick={() => setOpenCard("careers")}>Careers</button>
+            <button onClick={() => setOpenCard("dashboard")}>Balance dashboard</button>
+            <button onClick={() => setOpenCard("activity")}>Matching activity</button>
+          </div>
+        </>
+      ),
+    },
+    {
+      id: "respiratory",
+      title: "Respiratory System",
+      content: (
+        <>
           <h3>Body System #1</h3>
           <p>Respiratory system</p>
 
@@ -298,46 +173,74 @@
             The main organs that are in this system are : Lungs, trachea, bronchi, bronchioles, alveoli, diaphragm, nose, and mouth.
           </p>
 
+          <div className="clickGrid">
+            <FactButton id="lungs" label="Lungs" />
+            <FactButton id="trachea" label="Trachea" />
+            <FactButton id="alveoli" label="Alveoli" />
+          </div>
+          {openFact && ["lungs", "trachea", "alveoli"].includes(openFact) && <div className="factBox">{organFacts[openFact]}</div>}
+
           <h3>What It Does For The Body</h3>
           <p>
             The respiratory system gets oxygen into the body and removes carbon dioxide. Oxygen is used by cells to make energy, and carbon dioxide is a waste of gas that must be removed.
           </p>
 
-          <div class="image-box">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Respiratory_system_complete_en.svg/800px-Respiratory_system_complete_en.svg.png" alt="Respiratory system diagram">
-            <p class="caption">Respiratory system diagram</p>
-          </div>
-        </div>
-
-        <div id="cardiovascular" class="section">
-          <h2>Cardiovascular System</h2>
-
+          <StaticImage image={respImage} title="Respiratory system diagram" />
+        </>
+      ),
+    },
+    {
+      id: "cardiovascular",
+      title: "Cardiovascular System",
+      content: (
+        <>
           <h3>Body System #2</h3>
           <p>Cardiovascular system</p>
 
           <h3>Main Organs</h3>
           <p>The main organs of this are: Heart, blood, arteries, veins, and capillaries.</p>
 
+          <div className="clickGrid">
+            <FactButton id="heart" label="Heart" />
+            <FactButton id="arteries" label="Arteries" />
+            <FactButton id="veins" label="Veins" />
+          </div>
+          {openFact && ["heart", "arteries", "veins"].includes(openFact) && <div className="factBox">{organFacts[openFact]}</div>}
+
           <h3>What It Does For The Body</h3>
           <p>
             The cardiovascular system pumps blood in the whole body. It carries oxygen, nutrients, hormones, and waste products to the cells and from the cells.
           </p>
 
-          <div class="image-box">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Circulatory_System_en.svg/800px-Circulatory_System_en.svg.png" alt="Cardiovascular system diagram">
-            <p class="caption">Cardiovascular system diagram</p>
+          <StaticImage image={cardioImage} title="Cardiovascular system diagram" />
+        </>
+      ),
+    },
+    {
+      id: "together",
+      title: "How They Work Together",
+      content: (
+        <>
+          <div className="flowBox interactiveFlow">
+            <div onClick={() => setOpenCard("respiratory")}>1. Oxygen enters lungs</div>
+            <span>→</span>
+            <div>2. Blood picks it up</div>
+            <span>→</span>
+            <div onClick={() => setOpenCard("cardiovascular")}>3. Heart pumps it to body</div>
           </div>
-        </div>
 
-        <div id="together" class="section">
-          <h2>How They Work Together</h2>
-
-          <div class="flow">
-            <div>Oxygen enters lungs</div>
-            <span>→</span>
-            <div>Blood picks it up</div>
-            <span>→</span>
-            <div>Heart pumps it to body</div>
+          <div className="simulatorBox">
+            <h3>Interactive Example: Exercising</h3>
+            <p>Move the slider to show what happens when your body needs more oxygen.</p>
+            <input type="range" min="0" max="100" value={oxygenNeed} onChange={(e) => setOxygenNeed(Number(e.target.value))} />
+            <div className="meterLine">
+              <div style={{ width: `${oxygenNeed}%` }}></div>
+            </div>
+            <div className="simGrid">
+              <div><b>Muscle Oxygen Need:</b><br />{oxygenNeed < 35 ? "Low" : oxygenNeed < 70 ? "Medium" : "High"}</div>
+              <div><b>Breathing Rate:</b><br />{oxygenNeed < 35 ? "Normal" : oxygenNeed < 70 ? "Faster" : "Very fast"}</div>
+              <div><b>Heart Rate:</b><br />{oxygenNeed < 35 ? "Normal" : oxygenNeed < 70 ? "Increases" : "Increases a lot"}</div>
+            </div>
           </div>
 
           <h3>How These Two Systems Connect</h3>
@@ -354,10 +257,28 @@
           <p>
             While you're exercising, your muscles need more oxygen. Your breathing rate will go up to bring in more oxygen, and your heart rate also increases to pump more oxygen-rich blood to your muscles even faster.
           </p>
-        </div>
+        </>
+      ),
+    },
+    {
+      id: "asthma",
+      title: "Disease / Disorder: Asthma",
+      content: (
+        <>
+          <div className="asthmaButtons">
+            <button className={asthmaLevel === "normal" ? "selected" : ""} onClick={() => setAsthmaLevel("normal")}>Normal</button>
+            <button className={asthmaLevel === "mild" ? "selected" : ""} onClick={() => setAsthmaLevel("mild")}>Mild Symptoms</button>
+            <button className={asthmaLevel === "severe" ? "selected" : ""} onClick={() => setAsthmaLevel("severe")}>Severe Attack</button>
+          </div>
 
-        <div id="asthma" class="section">
-          <h2>Disease / Disorder: Asthma</h2>
+          <div className="asthmaDisplay">
+            <h3>{asthmaInfo[asthmaLevel].title}</h3>
+            <p>{asthmaInfo[asthmaLevel].text}</p>
+            <div className="simGrid">
+              <div><b>Oxygen:</b><br />{asthmaInfo[asthmaLevel].oxygen}</div>
+              <div><b>Heart:</b><br />{asthmaInfo[asthmaLevel].heart}</div>
+            </div>
+          </div>
 
           <h3>What Disease Or Disorder?</h3>
           <p>Asthma</p>
@@ -386,83 +307,234 @@
           <p>
             Asthma disrupts homeostasis by making it more difficult for the oxygen to enter the lungs and get to the blood. This lowers oxygen levels, and increases carbon dioxide levels, and make the heart and lungs work even harder to keep the body more balanced.
           </p>
-        </div>
-
-        <div id="careers" class="section">
-          <h2>Careers</h2>
-
-          <div class="career-grid">
-            <div class="career-card">
+        </>
+      ),
+    },
+    {
+      id: "careers",
+      title: "Careers",
+      content: (
+        <>
+          <p>Click each career card to compare the two jobs.</p>
+          <div className="careerGrid">
+            <div className="careerCard" onClick={() => setOpenFact(openFact === "pulmonologist" ? null : "pulmonologist")}>
               <h3>Pulmonologist</h3>
               <p>
                 A pulmonologist is a doctor who is a specialist in the lungs and breathing problems. They treat diseases like asthma, pneumonia, COPD, and other respiratory problems.
               </p>
+              {openFact === "pulmonologist" && <div className="factBox">This career focuses more on diagnosing and treating lung diseases.</div>}
             </div>
-
-            <div class="career-card">
+            <div className="careerCard" onClick={() => setOpenFact(openFact === "therapist" ? null : "therapist")}>
               <h3>Respiratory Therapist</h3>
               <p>
                 A respiratory therapist can help patients with breathing problems. They can give breathing treatments, help with oxygen therapy, do breathing tests, and work with doctors to help maintain lung conditions.
               </p>
+              {openFact === "therapist" && <div className="factBox">This career focuses more on breathing treatments and helping patients with oxygen therapy.</div>}
             </div>
           </div>
-        </div>
+        </>
+      ),
+    },
+    {
+      id: "dashboard",
+      title: "Homeostasis Dashboard",
+      content: (
+        <>
+          <p>Click a body condition to see how oxygen, carbon dioxide, blood pH, and energy need change.</p>
 
-        <div id="sources" class="section">
-          <h2>Sources</h2>
+          <div className="dashboardButtons">
+            <button className={homeostasisMode === "resting" ? "selected" : ""} onClick={() => setHomeostasisMode("resting")}>Resting</button>
+            <button className={homeostasisMode === "exercising" ? "selected" : ""} onClick={() => setHomeostasisMode("exercising")}>Exercising</button>
+            <button className={homeostasisMode === "asthma" ? "selected" : ""} onClick={() => setHomeostasisMode("asthma")}>Asthma Attack</button>
+          </div>
 
+          <div className="dashboardCard">
+            <h3>{dashboardData[homeostasisMode].title}</h3>
+            <DashboardBar label="Oxygen Level" value={dashboardData[homeostasisMode].oxygen} detail={homeostasisMode === "asthma" ? "lower" : homeostasisMode === "exercising" ? "higher need" : "balanced"} />
+            <DashboardBar label="Carbon Dioxide Level" value={dashboardData[homeostasisMode].carbon} detail={homeostasisMode === "asthma" ? "higher" : homeostasisMode === "exercising" ? "increases" : "balanced"} />
+            <DashboardBar label="Blood pH Balance" value={dashboardData[homeostasisMode].ph} detail={homeostasisMode === "asthma" ? "less balanced" : "more balanced"} />
+            <DashboardBar label="Energy Need" value={dashboardData[homeostasisMode].energy} detail={homeostasisMode === "resting" ? "low" : "high"} />
+          </div>
+
+          <div className="dashboardExplain">
+            {dashboardData[homeostasisMode].explanation}
+          </div>
+        </>
+      ),
+    },
+    {
+      id: "activity",
+      title: "Matching Activity",
+      content: (
+        <>
+          <p>Match each science term with its very simple meaning.</p>
+          <div className="matchingGame">
+            <div className="matchColumn">
+              <h3>Terms</h3>
+              {matchingTerms.map((item) => (
+                <button
+                  key={item.term}
+                  className={selectedTerm === item.term ? "termButton selectedTerm" : matchedTerms.includes(item.term) ? "termButton matched" : "termButton"}
+                  onClick={() => !matchedTerms.includes(item.term) && setSelectedTerm(item.term)}
+                >
+                  {item.term}
+                </button>
+              ))}
+            </div>
+            <div className="matchColumn">
+              <h3>Meanings</h3>
+              {matchingTerms.map((item) => (
+                <button
+                  key={item.meaning}
+                  className={matchedTerms.includes(item.term) ? "meaningButton matched" : "meaningButton"}
+                  onClick={() => !matchedTerms.includes(item.term) && checkMatch(item.meaning)}
+                >
+                  {item.meaning}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="matchMessage">{matchMessage}</div>
+          <div className="scoreBox">Score: {matchedTerms.length} / {matchingTerms.length}</div>
+          {matchedTerms.length === matchingTerms.length && <div className="completeBox">All done! You matched every term correctly.</div>}
+          <button className="resetButton" onClick={resetMatchingGame}>Reset Activity</button>
+        </>
+      ),
+    },
+    {
+      id: "sources",
+      title: "Sources",
+      content: (
+        <>
           <p>These are the website links I used for my project.</p>
-
-          <div class="source-box">
-            <b>Source 1</b>
-            <a href="https://www.mayoclinic.org/diseases-conditions/asthma/symptoms-causes/syc-20369653" target="_blank">
-              https://www.mayoclinic.org/diseases-conditions/asthma/symptoms-causes/syc-20369653
-            </a>
+          <div className="sourcesBox">
+            <div className="sourceRow"><label>Source 1</label><a href="https://www.mayoclinic.org/diseases-conditions/asthma/symptoms-causes/syc-20369653" target="_blank" rel="noreferrer">https://www.mayoclinic.org/diseases-conditions/asthma/symptoms-causes/syc-20369653</a></div>
+            <div className="sourceRow"><label>Source 2</label><a href="https://my.clevelandclinic.org/health/body/circulatory-and-cardiovascular-system" target="_blank" rel="noreferrer">https://my.clevelandclinic.org/health/body/circulatory-and-cardiovascular-system</a></div>
+            <div className="sourceRow"><label>Source 3</label><a href="https://my.clevelandclinic.org/health/body/21205-respiratory-system" target="_blank" rel="noreferrer">https://my.clevelandclinic.org/health/body/21205-respiratory-system</a></div>
+            <div className="sourceRow"><label>Source 4</label><a href="https://www.webmd.com/health-insurance/insurance-doctor-types" target="_blank" rel="noreferrer">https://www.webmd.com/health-insurance/insurance-doctor-types</a></div>
           </div>
+        </>
+      ),
+    },
+  ];
 
-          <div class="source-box">
-            <b>Source 2</b>
-            <a href="https://my.clevelandclinic.org/health/body/circulatory-and-cardiovascular-system" target="_blank">
-              https://my.clevelandclinic.org/health/body/circulatory-and-cardiovascular-system
-            </a>
-          </div>
+  const activeCard = cards.find((card) => card.id === openCard);
+  const progress = Math.round(((cards.findIndex((card) => card.id === openCard) + 1) / cards.length) * 100);
 
-          <div class="source-box">
-            <b>Source 3</b>
-            <a href="https://my.clevelandclinic.org/health/body/21205-respiratory-system" target="_blank">
-              https://my.clevelandclinic.org/health/body/21205-respiratory-system
-            </a>
-          </div>
+  return (
+    <div className="page">
+      <style>{`
+        body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: linear-gradient(135deg, #eef7ff 0%, #f8fbff 45%, #fff4f4 100%); color: #222; }
+        .page { min-height: 100vh; }
+        .header { background: linear-gradient(120deg, #ffffff, #eaf5ff); border-bottom: 1px solid #d9e8f5; padding: 32px 20px; text-align: center; }
+        .header h1 { margin: 0; font-size: 36px; font-weight: 800; color: #1d3557; }
+        .header p { max-width: 800px; margin: 12px auto 0; color: #4d5b6a; font-size: 16px; line-height: 1.5; }
+        .progressWrap { max-width: 760px; height: 12px; background: #dceeff; border-radius: 999px; margin: 18px auto 0; overflow: hidden; }
+        .progressBar { height: 100%; background: linear-gradient(90deg, #2b6cb0, #f56565); transition: 0.3s; }
+        .container { max-width: 1120px; margin: 30px auto; padding: 0 20px 40px; }
+        .layout { display: grid; grid-template-columns: 285px 1fr; gap: 25px; align-items: start; }
+        .sidebar { background: white; border: 1px solid #dbe7f3; border-radius: 18px; padding: 16px; position: sticky; top: 20px; box-shadow: 0 8px 24px rgba(29, 53, 87, 0.08); }
+        .sidebar h2 { font-size: 18px; margin: 0 0 12px; color: #1d3557; }
+        .tabButton { width: 100%; text-align: left; background: #f7fbff; border: 1px solid #d8e8f6; padding: 13px; border-radius: 12px; margin-bottom: 9px; font-size: 15px; cursor: pointer; transition: all 0.25s ease; }
+        .tabButton:hover { background: #edf7ff; transform: translateY(-3px) scale(1.03); box-shadow: 0 8px 18px rgba(43, 108, 176, 0.18); }
+        .tabButton.active { background: #2b6cb0; border-color: #2b6cb0; color: white; font-weight: bold; }
+        .contentCard { background: white; border: 1px solid #dbe7f3; border-radius: 18px; padding: 30px; box-shadow: 0 8px 24px rgba(29, 53, 87, 0.08); animation: fadeIn 0.25s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .contentCard h2 { margin-top: 0; font-size: 30px; color: #1d3557; border-bottom: 3px solid #edf4fb; padding-bottom: 12px; }
+        .contentCard h3 { margin-top: 24px; margin-bottom: 8px; font-size: 19px; color: #2b4a67; }
+        .contentCard p, .contentCard li { font-size: 16px; line-height: 1.7; color: #333; }
+        .heroGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 22px; }
+        .miniCard { border-radius: 16px; padding: 18px; color: white; cursor: pointer; transition: 0.2s; }
+        .miniCard:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,0.12); }
+        .miniCard span { font-weight: bold; font-size: 18px; }
+        .miniCard p { color: white; margin-bottom: 6px; }
+        .miniCard small { opacity: 0.9; }
+        .miniCard.blue { background: linear-gradient(135deg, #2b6cb0, #63b3ed); }
+        .miniCard.red { background: linear-gradient(135deg, #c53030, #fc8181); }
+        .quickJumpBox { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+        .quickJumpBox button, .asthmaButtons button, .factButton { border: none; background: #edf7ff; color: #1d3557; border: 1px solid #c7def4; border-radius: 999px; padding: 10px 14px; cursor: pointer; font-weight: bold; transition: all 0.25s ease; }
+        .quickJumpBox button:hover, .asthmaButtons button:hover, .factButton:hover { background: #2b6cb0; color: white; transform: translateY(-4px) scale(1.06); box-shadow: 0 8px 18px rgba(43, 108, 176, 0.25); }
+        .clickGrid { display: flex; flex-wrap: wrap; gap: 10px; margin: 15px 0; }
+        .factBox { background: #fff8e6; border: 1px solid #ffd76d; border-radius: 14px; padding: 14px; margin-top: 12px; line-height: 1.6; }
+        .flowBox { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-bottom: 18px; }
+        .flowBox div { background: #edf7ff; border: 1px solid #c7def4; padding: 12px 14px; border-radius: 12px; font-weight: bold; color: #1d3557; transition: 0.2s; }
+        .interactiveFlow div:hover { background: #2b6cb0; color: white; cursor: pointer; transform: scale(1.03); }
+        .flowBox span { font-size: 24px; font-weight: bold; color: #2b6cb0; }
+        .simulatorBox, .asthmaDisplay { background: #f7fbff; border: 1px solid #d8e8f6; border-radius: 16px; padding: 18px; margin: 18px 0; }
+        input[type="range"] { width: 100%; accent-color: #2b6cb0; cursor: pointer; }
+        .meterLine { width: 100%; height: 14px; background: #dceeff; border-radius: 999px; overflow: hidden; margin: 12px 0; }
+        .meterLine div { height: 100%; background: linear-gradient(90deg, #63b3ed, #f56565); transition: 0.2s; }
+        .simGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 14px; }
+        .simGrid div { background: white; border: 1px solid #d8e8f6; border-radius: 12px; padding: 12px; }
+        .asthmaButtons { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 15px; }
+        .dashboardButtons { display: flex; flex-wrap: wrap; gap: 10px; margin: 18px 0; }
+        .dashboardButtons button { border: 1px solid #c7def4; background: #edf7ff; color: #1d3557; border-radius: 999px; padding: 10px 14px; cursor: pointer; font-weight: bold; transition: all 0.25s ease; }
+        .dashboardButtons button:hover { background: #2b6cb0; color: white; transform: translateY(-4px) scale(1.06); box-shadow: 0 8px 18px rgba(43, 108, 176, 0.25); }
+        .dashboardButtons button.selected { background: #2b6cb0; color: white; border-color: #2b6cb0; }
+        .dashboardCard { background: #f7fbff; border: 1px solid #d8e8f6; border-radius: 16px; padding: 18px; margin-top: 14px; }
+        .dashboardBarBox { background: white; border: 1px solid #d8e8f6; border-radius: 14px; padding: 12px; margin: 12px 0; }
+        .barTop { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 8px; color: #1d3557; }
+        .barTop span { color: #666; font-size: 14px; }
+        .dashboardMeter { width: 100%; height: 16px; background: #dceeff; border-radius: 999px; overflow: hidden; }
+        .dashboardMeter div { height: 100%; background: linear-gradient(90deg, #63b3ed, #f56565); transition: width 0.35s ease; }
+        .dashboardExplain { margin-top: 14px; background: #fff8e6; border: 1px solid #ffd76d; border-radius: 14px; padding: 14px; line-height: 1.6; font-weight: bold; }
+        .asthmaButtons button.selected { background: #c53030; color: white; border-color: #c53030; }
+        .careerGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+        .careerCard { background: #f7fbff; border: 1px solid #d8e8f6; padding: 18px; border-radius: 16px; cursor: pointer; transition: 0.2s; }
+        .careerCard:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.08); }
+        .imageBox { margin-top: 24px; border: 1px solid #d8e8f6; border-radius: 18px; padding: 16px; background: #f7fbff; text-align: center; }
+        .imageBox img { max-width: 100%; max-height: 520px; border-radius: 12px; display: block; margin: 0 auto 12px; border: 1px solid #d8e8f6; background: white; }
+        .caption { font-size: 14px !important; color: #666 !important; margin-bottom: 0; }
+        .sourcesBox { display: grid; gap: 12px; margin-top: 15px; }
+        .sourceRow { background: #f7fbff; border: 1px solid #d8e8f6; border-radius: 14px; padding: 14px; }
+        .sourceRow label { display: block; font-weight: bold; margin-bottom: 7px; color: #1d3557; }
+        .sourceRow a { color: #2b6cb0; overflow-wrap: anywhere; }
+        .matchingGame { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 18px; }
+        .matchColumn { background: #f7fbff; border: 1px solid #d8e8f6; border-radius: 16px; padding: 16px; }
+        .matchColumn h3 { margin-top: 0; }
+        .termButton, .meaningButton { width: 100%; display: block; text-align: left; margin-bottom: 10px; border: 1px solid #c7def4; background: white; color: #1d3557; border-radius: 12px; padding: 12px; cursor: pointer; font-weight: bold; transition: all 0.25s ease; }
+        .termButton:hover, .meaningButton:hover { background: #edf7ff; transform: translateY(-4px) scale(1.03); box-shadow: 0 8px 18px rgba(43, 108, 176, 0.18); }
+        .selectedTerm { background: #2b6cb0 !important; color: white !important; border-color: #2b6cb0 !important; }
+        .matched { background: #dcfce7 !important; color: #166534 !important; border-color: #86efac !important; }
+        .matchMessage { margin-top: 16px; background: #fff8e6; border: 1px solid #ffd76d; border-radius: 14px; padding: 14px; font-weight: bold; }
+        .scoreBox { margin-top: 12px; background: #edf7ff; border: 1px solid #c7def4; border-radius: 14px; padding: 12px; font-weight: bold; color: #1d3557; }
+        .completeBox { margin-top: 12px; background: #dcfce7; border: 1px solid #86efac; color: #166534; border-radius: 14px; padding: 12px; font-weight: bold; }
+        .resetButton { margin-top: 14px; border: none; border-radius: 999px; padding: 11px 16px; background: #c53030; color: white; font-weight: bold; cursor: pointer; transition: all 0.25s ease; }
+        .resetButton:hover { background: #9b2c2c; transform: translateY(-4px) scale(1.05); box-shadow: 0 8px 18px rgba(197, 48, 48, 0.25); }
+        .bottomNav { display: flex; justify-content: space-between; gap: 12px; margin-top: 24px; }
+        .bottomNav button { border: none; border-radius: 999px; padding: 11px 16px; background: #1d3557; color: white; font-weight: bold; cursor: pointer; transition: all 0.25s ease; }
+        .bottomNav button:hover:not(:disabled) { background: #2b6cb0; transform: translateY(-4px) scale(1.05); box-shadow: 0 8px 18px rgba(29, 53, 87, 0.25); }
+        .bottomNav button:disabled { background: #b8c5d1; cursor: not-allowed; }
+        @media (max-width: 800px) { .layout { grid-template-columns: 1fr; } .sidebar { position: static; } .header h1 { font-size: 27px; } .heroGrid, .careerGrid, .simGrid, .matchingGame { grid-template-columns: 1fr; } }
+      `}</style>
 
-          <div class="source-box">
-            <b>Source 4</b>
-            <a href="https://www.webmd.com/health-insurance/insurance-doctor-types" target="_blank">
-              https://www.webmd.com/health-insurance/insurance-doctor-types
-            </a>
-          </div>
+      <header className="header">
+        <h1>Respiratory System + Cardiovascular System</h1>
+        <p>Anatomy & Physiology II Final Project: how these two body systems work together to maintain homeostasis in the body.</p>
+        <div className="progressWrap"><div className="progressBar" style={{ width: `${progress}%` }}></div></div>
+      </header>
+
+      <main className="container">
+        <div className="layout">
+          <aside className="sidebar">
+            <h2>Click A Section</h2>
+            {cards.map((card) => (
+              <button key={card.id} className={openCard === card.id ? "tabButton active" : "tabButton"} onClick={() => setOpenCard(card.id)}>
+                {card.title}
+              </button>
+            ))}
+          </aside>
+
+          <section className="contentCard">
+            <h2>{activeCard.title}</h2>
+            {activeCard.content}
+            <div className="bottomNav">
+              <button disabled={cards.findIndex((card) => card.id === openCard) === 0} onClick={() => setOpenCard(cards[cards.findIndex((card) => card.id === openCard) - 1].id)}>← Previous</button>
+              <button disabled={cards.findIndex((card) => card.id === openCard) === cards.length - 1} onClick={() => setOpenCard(cards[cards.findIndex((card) => card.id === openCard) + 1].id)}>Next →</button>
+            </div>
+          </section>
         </div>
-
-      </div>
+      </main>
     </div>
-  </div>
-
-  <script>
-    function showSection(sectionId, button) {
-      var sections = document.querySelectorAll('.section');
-      var tabs = document.querySelectorAll('.tab');
-
-      sections.forEach(function(section) {
-        section.classList.remove('active');
-      });
-
-      tabs.forEach(function(tab) {
-        tab.classList.remove('active');
-      });
-
-      document.getElementById(sectionId).classList.add('active');
-      button.classList.add('active');
-    }
-  </script>
-
-</body>
-</html>
+  );
+}
