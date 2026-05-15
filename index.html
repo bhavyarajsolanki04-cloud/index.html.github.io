@@ -7,7 +7,7 @@ export default function AnatomyFinalProjectWebsite() {
   const [openFact, setOpenFact] = useState(null);
   const [selectedTerm, setSelectedTerm] = useState(null);
   const [matchedTerms, setMatchedTerms] = useState([]);
-  const [matchMessage, setMatchMessage] = useState("Pick a term, then pick the meaning that matches it.");
+  const [matchMessage, setMatchMessage] = useState("Pick a word, then pick what it means.");
   const [homeostasisMode, setHomeostasisMode] = useState("resting");
 
   const respImage = "https://www.lung.ca/sites/default/files/Respiratory%20System.jpg";
@@ -16,44 +16,46 @@ export default function AnatomyFinalProjectWebsite() {
   const organFacts = {
     lungs: "The lungs help get oxygen into the blood and get carbon dioxide out.",
     trachea: "The trachea is the tube that air goes through to get to the lungs.",
-    alveoli: "Alveoli are tiny air sacs where gas exchange happens.",
-    heart: "The heart pumps blood through the body so oxygen can reach cells.",
-    arteries: "Arteries carry blood away from the heart.",
-    veins: "Veins carry blood back toward the heart.",
+    alveoli: "Alveoli are tiny air sacs where oxygen and carbon dioxide switch.",
+    heart: "The heart pumps blood so oxygen can get around the body.",
+    arteries: "Arteries move blood away from the heart.",
+    veins: "Veins move blood back to the heart.",
   };
 
   const matchingTerms = [
-    { term: "Lungs", meaning: "Organs that help you breathe." },
-    { term: "Heart", meaning: "Organ that pumps blood." },
-    { term: "Alveoli", meaning: "Tiny air sacs in the lungs." },
-    { term: "Arteries", meaning: "Blood vessels that carry blood away from the heart." },
-    { term: "Veins", meaning: "Blood vessels that carry blood back to the heart." },
-    { term: "Asthma", meaning: "A condition that makes breathing harder." },
+    { term: "Lungs", meaning: "Parts that help you breathe." },
+    { term: "Heart", meaning: "The part that pumps blood." },
+    { term: "Alveoli", meaning: "Small air sacs in the lungs." },
+    { term: "Arteries", meaning: "Tubes that move blood away from the heart." },
+    { term: "Veins", meaning: "Tubes that move blood back to the heart." },
+    { term: "Asthma", meaning: "A sickness/problem that makes breathing harder." },
   ];
 
   function checkMatch(meaning) {
     if (!selectedTerm) {
-      setMatchMessage("Pick a term first.");
+      setMatchMessage("Pick a word first.");
       return;
     }
 
-    const correct = matchingTerms.find((item) => item.term === selectedTerm && item.meaning === meaning);
+    const correct = matchingTerms.find(
+      (item) => item.term === selectedTerm && item.meaning === meaning
+    );
 
     if (correct) {
       if (!matchedTerms.includes(selectedTerm)) {
         setMatchedTerms([...matchedTerms, selectedTerm]);
       }
-      setMatchMessage("Correct match!");
+      setMatchMessage("Correct!");
       setSelectedTerm(null);
     } else {
-      setMatchMessage("Not quite. Try again.");
+      setMatchMessage("Not right, try again.");
     }
   }
 
   function resetMatchingGame() {
     setSelectedTerm(null);
     setMatchedTerms([]);
-    setMatchMessage("Pick a term, then pick the meaning that matches it.");
+    setMatchMessage("Pick a word, then pick what it means.");
   }
 
   const dashboardData = {
@@ -63,7 +65,8 @@ export default function AnatomyFinalProjectWebsite() {
       carbon: 35,
       ph: 70,
       energy: 30,
-      explanation: "When the body is resting, breathing and heart rate stay normal because the body does not need as much energy."
+      explanation:
+        "When the body is resting, breathing and heart rate are normal because the body is not using as much energy.",
     },
     exercising: {
       title: "Exercising",
@@ -71,7 +74,8 @@ export default function AnatomyFinalProjectWebsite() {
       carbon: 65,
       ph: 60,
       energy: 90,
-      explanation: "When the body is exercising, muscles need more oxygen, so breathing rate and heart rate increase."
+      explanation:
+        "When the body is exercising, muscles need more oxygen, so breathing and heart rate go up.",
     },
     asthma: {
       title: "Asthma Attack",
@@ -79,8 +83,9 @@ export default function AnatomyFinalProjectWebsite() {
       carbon: 80,
       ph: 45,
       energy: 75,
-      explanation: "During an asthma attack, less oxygen can get into the lungs and more carbon dioxide can build up, so the body has to work harder."
-    }
+      explanation:
+        "During an asthma attack, less oxygen can get into the lungs and carbon dioxide can build up, so the body has to work harder.",
+    },
   };
 
   const DashboardBar = ({ label, value, detail }) => (
@@ -98,21 +103,21 @@ export default function AnatomyFinalProjectWebsite() {
   const asthmaInfo = {
     normal: {
       title: "Normal Breathing",
-      text: "Air can move in and out of the lungs more easily. Oxygen levels stay more balanced.",
-      oxygen: "Normal oxygen flow",
-      heart: "Normal heart workload",
+      text: "Air can move in and out of the lungs normally. Oxygen levels stay more normal.",
+      oxygen: "Normal oxygen",
+      heart: "Heart working normally",
     },
     mild: {
       title: "Mild Asthma Symptoms",
-      text: "The airways begin to tighten, which can cause coughing, wheezing, or shortness of breath.",
-      oxygen: "Less oxygen enters the lungs",
-      heart: "Heart works a little harder",
+      text: "The airways start to get tighter. This can cause coughing, wheezing, or shortness of breath.",
+      oxygen: "Less oxygen gets in",
+      heart: "Heart works harder",
     },
     severe: {
       title: "Severe Asthma Attack",
-      text: "The airways become swollen, tight, and filled with mucus. It becomes much harder to breathe.",
-      oxygen: "Much less oxygen enters the blood",
-      heart: "Heart and lungs work much harder",
+      text: "The airways get swollen, tight, and filled with mucus. This makes it way harder to breathe.",
+      oxygen: "Way less oxygen gets in",
+      heart: "Heart and lungs work a lot harder",
     },
   };
 
@@ -178,7 +183,9 @@ export default function AnatomyFinalProjectWebsite() {
             <FactButton id="trachea" label="Trachea" />
             <FactButton id="alveoli" label="Alveoli" />
           </div>
-          {openFact && ["lungs", "trachea", "alveoli"].includes(openFact) && <div className="factBox">{organFacts[openFact]}</div>}
+          {openFact && ["lungs", "trachea", "alveoli"].includes(openFact) && (
+            <div className="factBox">{organFacts[openFact]}</div>
+          )}
 
           <h3>What It Does For The Body</h3>
           <p>
@@ -205,7 +212,9 @@ export default function AnatomyFinalProjectWebsite() {
             <FactButton id="arteries" label="Arteries" />
             <FactButton id="veins" label="Veins" />
           </div>
-          {openFact && ["heart", "arteries", "veins"].includes(openFact) && <div className="factBox">{organFacts[openFact]}</div>}
+          {openFact && ["heart", "arteries", "veins"].includes(openFact) && (
+            <div className="factBox">{organFacts[openFact]}</div>
+          )}
 
           <h3>What It Does For The Body</h3>
           <p>
@@ -222,24 +231,30 @@ export default function AnatomyFinalProjectWebsite() {
       content: (
         <>
           <div className="flowBox interactiveFlow">
-            <div onClick={() => setOpenCard("respiratory")}>1. Oxygen enters lungs</div>
+            <div onClick={() => setOpenCard("respiratory")}>1. Oxygen goes into lungs</div>
             <span>→</span>
-            <div>2. Blood picks it up</div>
+            <div>2. Blood takes the oxygen</div>
             <span>→</span>
-            <div onClick={() => setOpenCard("cardiovascular")}>3. Heart pumps it to body</div>
+            <div onClick={() => setOpenCard("cardiovascular")}>3. Heart pumps it around</div>
           </div>
 
           <div className="simulatorBox">
-            <h3>Interactive Example: Exercising</h3>
-            <p>Move the slider to show what happens when your body needs more oxygen.</p>
-            <input type="range" min="0" max="100" value={oxygenNeed} onChange={(e) => setOxygenNeed(Number(e.target.value))} />
+            <h3>Example: Exercising</h3>
+            <p>Move this to show what happens when your body needs more oxygen.</p>
+            <input
+              type="range"
+              min="0"
+              max="100"
+              value={oxygenNeed}
+              onChange={(e) => setOxygenNeed(Number(e.target.value))}
+            />
             <div className="meterLine">
               <div style={{ width: `${oxygenNeed}%` }}></div>
             </div>
             <div className="simGrid">
-              <div><b>Muscle Oxygen Need:</b><br />{oxygenNeed < 35 ? "Low" : oxygenNeed < 70 ? "Medium" : "High"}</div>
-              <div><b>Breathing Rate:</b><br />{oxygenNeed < 35 ? "Normal" : oxygenNeed < 70 ? "Faster" : "Very fast"}</div>
-              <div><b>Heart Rate:</b><br />{oxygenNeed < 35 ? "Normal" : oxygenNeed < 70 ? "Increases" : "Increases a lot"}</div>
+              <div><b>Muscles need oxygen:</b><br />{oxygenNeed < 35 ? "Low" : oxygenNeed < 70 ? "Medium" : "High"}</div>
+              <div><b>Breathing:</b><br />{oxygenNeed < 35 ? "Normal" : oxygenNeed < 70 ? "Faster" : "Much faster"}</div>
+              <div><b>Heart rate:</b><br />{oxygenNeed < 35 ? "Normal" : oxygenNeed < 70 ? "Goes up" : "Goes up a lot"}</div>
             </div>
           </div>
 
@@ -255,7 +270,7 @@ export default function AnatomyFinalProjectWebsite() {
 
           <h3>Real-Life Example</h3>
           <p>
-            While you're exercising, your muscles need more oxygen. Your breathing rate will go up to bring in more oxygen, and your heart rate also increases to pump more oxygen-rich blood to your muscles even faster.
+            While you're exercising, your muscles need more oxygen. Your breathing rate will go up to bring in more oxygen, and your heart rate also goes up to pump more oxygen-rich blood to your muscles even faster.
           </p>
         </>
       ),
@@ -315,21 +330,21 @@ export default function AnatomyFinalProjectWebsite() {
       title: "Careers",
       content: (
         <>
-          <p>Click each career card to compare the two jobs.</p>
+          <p>Click the career cards to see a little more about them.</p>
           <div className="careerGrid">
             <div className="careerCard" onClick={() => setOpenFact(openFact === "pulmonologist" ? null : "pulmonologist")}>
               <h3>Pulmonologist</h3>
               <p>
                 A pulmonologist is a doctor who is a specialist in the lungs and breathing problems. They treat diseases like asthma, pneumonia, COPD, and other respiratory problems.
               </p>
-              {openFact === "pulmonologist" && <div className="factBox">This career focuses more on diagnosing and treating lung diseases.</div>}
+              {openFact === "pulmonologist" && <div className="factBox">This job is more about finding and treating lung problems.</div>}
             </div>
             <div className="careerCard" onClick={() => setOpenFact(openFact === "therapist" ? null : "therapist")}>
               <h3>Respiratory Therapist</h3>
               <p>
                 A respiratory therapist can help patients with breathing problems. They can give breathing treatments, help with oxygen therapy, do breathing tests, and work with doctors to help maintain lung conditions.
               </p>
-              {openFact === "therapist" && <div className="factBox">This career focuses more on breathing treatments and helping patients with oxygen therapy.</div>}
+              {openFact === "therapist" && <div className="factBox">This job is more about helping people breathe better and giving breathing treatments.</div>}
             </div>
           </div>
         </>
@@ -340,7 +355,7 @@ export default function AnatomyFinalProjectWebsite() {
       title: "Homeostasis Dashboard",
       content: (
         <>
-          <p>Click a body condition to see how oxygen, carbon dioxide, blood pH, and energy need change.</p>
+          <p>Click one to see how oxygen, carbon dioxide, blood pH, and energy change.</p>
 
           <div className="dashboardButtons">
             <button className={homeostasisMode === "resting" ? "selected" : ""} onClick={() => setHomeostasisMode("resting")}>Resting</button>
@@ -350,9 +365,9 @@ export default function AnatomyFinalProjectWebsite() {
 
           <div className="dashboardCard">
             <h3>{dashboardData[homeostasisMode].title}</h3>
-            <DashboardBar label="Oxygen Level" value={dashboardData[homeostasisMode].oxygen} detail={homeostasisMode === "asthma" ? "lower" : homeostasisMode === "exercising" ? "higher need" : "balanced"} />
+            <DashboardBar label="Oxygen Level" value={dashboardData[homeostasisMode].oxygen} detail={homeostasisMode === "asthma" ? "lower" : homeostasisMode === "exercising" ? "needed more" : "balanced"} />
             <DashboardBar label="Carbon Dioxide Level" value={dashboardData[homeostasisMode].carbon} detail={homeostasisMode === "asthma" ? "higher" : homeostasisMode === "exercising" ? "increases" : "balanced"} />
-            <DashboardBar label="Blood pH Balance" value={dashboardData[homeostasisMode].ph} detail={homeostasisMode === "asthma" ? "less balanced" : "more balanced"} />
+            <DashboardBar label="Blood pH Balance" value={dashboardData[homeostasisMode].ph} detail={homeostasisMode === "asthma" ? "not as balanced" : "more balanced"} />
             <DashboardBar label="Energy Need" value={dashboardData[homeostasisMode].energy} detail={homeostasisMode === "resting" ? "low" : "high"} />
           </div>
 
@@ -367,7 +382,7 @@ export default function AnatomyFinalProjectWebsite() {
       title: "Matching Activity",
       content: (
         <>
-          <p>Match each science term with its very simple meaning.</p>
+          <p>Match each science word with the easy meaning.</p>
           <div className="matchingGame">
             <div className="matchColumn">
               <h3>Terms</h3>
@@ -396,8 +411,8 @@ export default function AnatomyFinalProjectWebsite() {
           </div>
           <div className="matchMessage">{matchMessage}</div>
           <div className="scoreBox">Score: {matchedTerms.length} / {matchingTerms.length}</div>
-          {matchedTerms.length === matchingTerms.length && <div className="completeBox">All done! You matched every term correctly.</div>}
-          <button className="resetButton" onClick={resetMatchingGame}>Reset Activity</button>
+          {matchedTerms.length === matchingTerms.length && <div className="completeBox">Done, you matched all of them.</div>}
+          <button className="resetButton" onClick={resetMatchingGame}>Reset</button>
         </>
       ),
     },
@@ -406,7 +421,7 @@ export default function AnatomyFinalProjectWebsite() {
       title: "Sources",
       content: (
         <>
-          <p>These are the website links I used for my project.</p>
+          <p>These are the websites I used for my project.</p>
           <div className="sourcesBox">
             <div className="sourceRow"><label>Source 1</label><a href="https://www.mayoclinic.org/diseases-conditions/asthma/symptoms-causes/syc-20369653" target="_blank" rel="noreferrer">https://www.mayoclinic.org/diseases-conditions/asthma/symptoms-causes/syc-20369653</a></div>
             <div className="sourceRow"><label>Source 2</label><a href="https://my.clevelandclinic.org/health/body/circulatory-and-cardiovascular-system" target="_blank" rel="noreferrer">https://my.clevelandclinic.org/health/body/circulatory-and-cardiovascular-system</a></div>
@@ -418,8 +433,9 @@ export default function AnatomyFinalProjectWebsite() {
     },
   ];
 
-  const activeCard = cards.find((card) => card.id === openCard);
-  const progress = Math.round(((cards.findIndex((card) => card.id === openCard) + 1) / cards.length) * 100);
+  const activeCard = cards.find((card) => card.id === openCard) || cards[0];
+  const activeIndex = Math.max(cards.findIndex((card) => card.id === openCard), 0);
+  const progress = Math.round(((activeIndex + 1) / cards.length) * 100);
 
   return (
     <div className="page">
@@ -510,14 +526,14 @@ export default function AnatomyFinalProjectWebsite() {
 
       <header className="header">
         <h1>Respiratory System + Cardiovascular System</h1>
-        <p>Anatomy & Physiology II Final Project: how these two body systems work together to maintain homeostasis in the body.</p>
+        <p>Anatomy & Physiology II Final Project: how these two body systems work together to keep the body balanced.</p>
         <div className="progressWrap"><div className="progressBar" style={{ width: `${progress}%` }}></div></div>
       </header>
 
       <main className="container">
         <div className="layout">
           <aside className="sidebar">
-            <h2>Click A Section</h2>
+            <h2>Click a section</h2>
             {cards.map((card) => (
               <button key={card.id} className={openCard === card.id ? "tabButton active" : "tabButton"} onClick={() => setOpenCard(card.id)}>
                 {card.title}
@@ -529,8 +545,8 @@ export default function AnatomyFinalProjectWebsite() {
             <h2>{activeCard.title}</h2>
             {activeCard.content}
             <div className="bottomNav">
-              <button disabled={cards.findIndex((card) => card.id === openCard) === 0} onClick={() => setOpenCard(cards[cards.findIndex((card) => card.id === openCard) - 1].id)}>← Previous</button>
-              <button disabled={cards.findIndex((card) => card.id === openCard) === cards.length - 1} onClick={() => setOpenCard(cards[cards.findIndex((card) => card.id === openCard) + 1].id)}>Next →</button>
+              <button disabled={activeIndex === 0} onClick={() => setOpenCard(cards[activeIndex - 1].id)}>← Previous</button>
+              <button disabled={activeIndex === cards.length - 1} onClick={() => setOpenCard(cards[activeIndex + 1].id)}>Next →</button>
             </div>
           </section>
         </div>
